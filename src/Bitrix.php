@@ -9,9 +9,9 @@ class Bitrix {
 
   protected $uri;
 
-  function __construct( $uri ) {
+  function __construct( $name, $user, $token ) {
 
-    $this->uri = $uri;
+    $this->uri = "$name/rest/$user/$token/";
   }
 
   protected function create( $name ) {

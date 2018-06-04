@@ -15,12 +15,12 @@ class Request {
     $this->client = $client;
   }
 
-  protected function handleRequest( $type, $options = array() ) {
+  protected function handleRequest( $type, $parameters, $options = array() ) {
 
     $endpoint = $this->buildEndpoint();
-    $args     = $this->buildRequestArgs( $options );
+    $args     = $this->buildArgs( $this->getQueryVars( $parameters ), $options );
 
-    return $this->client->get( $endpoint, $args );
+    return call_user_func_array( array( $this->client, $type ), array( $endpoint, $args ) );
   }
 
   protected function buildEndpoint() {
@@ -28,9 +28,38 @@ class Request {
     return "crm.$this->resource.$this->method";
   }
 
-  protected function buildRequestArgs( $options = array() ) {
+  protected function buildArgs( $parameters, $options = array() ) {
 
-    return array ( 'query' => $options );
+    $query = array();
+    $args  = array();
+
+    if( $parameters ) {
+
+      foreach( $parameters as $parameter ) {
+
+        $query[ $parameter ] = $options[ $parameter ];
+        unset( $options[ $parameter ] );
+      }
+
+      $args[ 'query' ] = $query;
+    }
+
+    if( ! empty( $options ) ) {
+
+      $args[ 'json' ]  = $options;
+    }
+
+    return $args;
+  }
+
+  protected function getQueryVars( $parameters ) {
+
+    if( empty( $parameters ) ) {
+
+      return null;
+    }
+    
+    return explode( ',', $parameters );
   }
 
   public function setResource( $resource ) {
@@ -46,9 +75,10 @@ class Request {
   function __call( $name, $args = array() ) {
 
     if( in_array( $name, array( 'get', 'post' ) ) ) {
-        $options = ! empty( $args[ 0 ] ) ? $args[ 0 ] : array();
 
-        return $this->handleRequest( $name, $options );
+        $options = ! empty( $args[ 1 ] ) ? $args[ 1 ] : array();
+
+        return $this->handleRequest( $name, $args[ 0 ], $options );
     }
 
   }

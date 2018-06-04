@@ -3,7 +3,8 @@
 namespace Batel\Bitrix\Http;
 
 use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Request as GuzzleRequest; 
+use GuzzleHttp\Psr7\Request as GuzzleRequest;
+use Batel\Bitrix\Http\Response;
 
 class BitrixClient implements Client {
   
@@ -20,16 +21,19 @@ class BitrixClient implements Client {
 
   public function get( $url, $parameters = array() ) {
 
-    return json_decode( $this->client->get( 'crm.lead.get?id=1' )->getBody() );
+    return $this->response( $this->client->get( $url, $parameters ) );
   }
 
   public function post( $url, $parameters = array() ) {
-    
+
+    return $this->response( $this->client->post( $url, $parameters ) );
   }
 
-  protected function execute( GuzzleRequest $request, $options = array() ) {
+  protected function response( $response ) {
 
-    
+    $content = json_decode( $response->getBody() );
+
+    return new Response( $response->getStatusCode(), $content, $response->getHeaders() );
   }
 
 }

@@ -21,11 +21,14 @@ abstract class Resource {
 
     $this->request->setMethod( 'get' );
     
-    return $this->request->get( compact( 'id' ) );
+    return $this->request->get( 'id', compact( 'id' ) );
   }
 
   public function add( array $values ) {
 
+    $this->request->setMethod( 'add' );
+
+    return $this->request->post( '', $values );
   }
 
   public function getName() {
