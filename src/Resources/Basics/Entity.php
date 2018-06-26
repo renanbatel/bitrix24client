@@ -1,6 +1,6 @@
 <?php
 
-namespace Batel\Bitrix\Resources\Basics;
+namespace Batel\Bitrix24\Resources\Basics;
 
 abstract class Entity extends Resource {
   

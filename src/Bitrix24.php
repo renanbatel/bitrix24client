@@ -1,17 +1,21 @@
 <?php
 
-namespace Batel\Bitrix;
+namespace Batel\Bitrix24;
 
-use Batel\Bitrix\Http\BitrixClient;
-use Batel\Bitrix\Http\Request;
+use Batel\Bitrix24\Http\Bitrix24Client;
+use Batel\Bitrix24\Http\Request;
 
-class Bitrix {
+class Bitrix24 {
 
   protected $uri;
 
-  function __construct( $name, $user, $token ) {
+  function __construct( $params ) {
 
-    $this->uri = "$name/rest/$user/$token/";
+    $uri   = $params[ 'uri' ];
+    $user  = $params[ 'user' ];
+    $token = $params[ 'token' ];
+
+    $this->uri = "$uri/rest/$user/$token/";
   }
 
   protected function create( $name ) {
@@ -23,7 +27,7 @@ class Bitrix {
 
   protected function getClassPath( $name ) {
 
-    return 'Batel\\Bitrix\\Resources\\' . ucfirst( $name );
+    return 'Batel\\Bitrix24\\Resources\\' . ucfirst( $name );
   }
 
   protected function getRequest() {
@@ -33,7 +37,7 @@ class Bitrix {
 
   protected function getClient() {
     
-    return new BitrixClient( $this->uri );
+    return new Bitrix24Client( $this->uri );
   }
 
   function __get( $name ) {

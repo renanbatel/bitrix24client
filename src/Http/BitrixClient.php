@@ -1,12 +1,12 @@
 <?php
 
-namespace Batel\Bitrix\Http;
+namespace Batel\Bitrix24\Http;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request as GuzzleRequest;
-use Batel\Bitrix\Http\Response;
+use Batel\Bitrix24\Http\Response;
 
-class BitrixClient implements Client {
+class Bitrix24Client implements Client {
   
   protected $client;
 

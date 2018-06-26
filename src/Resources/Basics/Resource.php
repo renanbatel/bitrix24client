@@ -1,8 +1,8 @@
 <?php
 
-namespace Batel\Bitrix\Resources\Basics;
+namespace Batel\Bitrix24\Resources\Basics;
 
-use Batel\Bitrix\Http\Request;
+use Batel\Bitrix24\Http\Request;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
@@ -17,18 +17,25 @@ abstract class Resource {
     $this->request = $request;
   }
 
-  public function get( $id ) {
+  private function _add( array $values ) {
+
+    $this->request->setMethod( 'add' );
+
+    return $this->request->post( '', $values );
+  }
+
+  private function _get( $id ) {
 
     $this->request->setMethod( 'get' );
     
     return $this->request->get( 'id', compact( 'id' ) );
   }
 
-  public function add( array $values ) {
+  private function _list( array $values ) {
 
-    $this->request->setMethod( 'add' );
+    $this->request->setMethod( 'list' );
 
-    return $this->request->post( '', $values );
+    return $this->request->get( '', $values );
   }
 
   public function getName() {
@@ -38,4 +45,10 @@ abstract class Resource {
     return Str::lower( Str::singular( $reflectionClass->getShortName() ) );
   }
 
+  function __call( $name, $arguments ) {
+
+    $options = ! empty( $arguments[ 0 ] ) ? $arguments[ 0 ] : [];
+
+    return call_user_func_array( [ $this, '_' . $name ], [ $options ] );
+  }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Batel\Bitrix\Http;
+namespace Batel\Bitrix24\Http;
 
 class Request {
 
@@ -18,9 +18,9 @@ class Request {
   protected function handleRequest( $type, $parameters, $options = array() ) {
 
     $endpoint = $this->buildEndpoint();
-    $args     = $this->buildArgs( $this->getQueryVars( $parameters ), $options );
-
-    return call_user_func_array( array( $this->client, $type ), array( $endpoint, $args ) );
+    $args     = $this->buildArgs( $type, $this->getQueryVars( $parameters ), $options );
+    // return $args;
+    return call_user_func_array( [ $this->client, $type ], [ $endpoint, $args ] );
   }
 
   protected function buildEndpoint() {
@@ -28,10 +28,10 @@ class Request {
     return "crm.$this->resource.$this->method";
   }
 
-  protected function buildArgs( $parameters, $options = array() ) {
+  protected function buildArgs( $type, $parameters, $options = [] ) {
 
-    $query = array();
-    $args  = array();
+    $query = [];
+    $args  = [];
 
     if( $parameters ) {
 
@@ -41,12 +41,15 @@ class Request {
         unset( $options[ $parameter ] );
       }
 
-      $args[ 'query' ] = $query;
+      isset( $args[ 'query' ] ) ? array_merge( $args[ 'query' ], $query ) : $args[ 'query' ] = $query;
     }
 
     if( ! empty( $options ) ) {
 
-      $args[ 'json' ]  = $options;
+      if( $type == 'get' )
+        isset( $args[ 'query' ] ) ? array_merge( $args[ 'query' ], $options ) : $args[ 'query' ] = $options;
+      else if( $type == 'post' )
+        isset( $args[ 'json' ] ) ? array_merge( $args[ 'json' ], $options ) : $args[ 'json' ] = $options;
     }
 
     return $args;

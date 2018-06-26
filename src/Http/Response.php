@@ -1,6 +1,6 @@
 <?php
 
-namespace Batel\Bitrix\Http;
+namespace Batel\Bitrix24\Http;
 
 class Response {
 
