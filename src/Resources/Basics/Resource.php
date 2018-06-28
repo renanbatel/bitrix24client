@@ -3,46 +3,39 @@
 namespace Batel\Bitrix24\Resources\Basics;
 
 use Batel\Bitrix24\Http\Request;
-use Illuminate\Support\Str;
-use ReflectionClass;
+use Batel\Bitrix24\Util\Builder;
 
 abstract class Resource {
 
   protected $request;
+  protected $builder;
 
   function __construct( Request $request ) {
 
-    $request->setResource( $this->getName() );
+    $request->setResource( Builder::getName( $this ) );
     
     $this->request = $request;
   }
 
-  private function _add( array $values ) {
+  protected function _add( array $values ) {
 
     $this->request->setMethod( 'add' );
 
-    return $this->request->post( '', $values );
+    return $this->request->post( $values );
   }
 
-  private function _get( $id ) {
+  protected function _get( array $values ) {
 
     $this->request->setMethod( 'get' );
     
-    return $this->request->get( 'id', compact( 'id' ) );
+    return $this->request->get( $values );
   }
 
-  private function _list( array $values ) {
+  protected function _list( array $values ) {
 
     $this->request->setMethod( 'list' );
 
-    return $this->request->get( '', $values );
-  }
-
-  public function getName() {
-    
-    $reflectionClass = new ReflectionClass( $this );
-
-    return Str::lower( Str::singular( $reflectionClass->getShortName() ) );
+    return $this->request->get( $values );
   }
 
   function __call( $name, $arguments ) {

@@ -12,19 +12,19 @@ class Bitrix24Client implements Client {
 
   function __construct( $uri ) {
 
-    $this->client = new GuzzleClient( array (
+    $this->client = new GuzzleClient( [
       'base_uri'        => $uri,
       'allow_redirects' => false,
       'verify'          => false
-    ) );
+     ] );
   }
 
-  public function get( $url, $parameters = array() ) {
+  public function get( $url, $parameters = [] ) {
 
     return $this->response( $this->client->get( $url, $parameters ) );
   }
 
-  public function post( $url, $parameters = array() ) {
+  public function post( $url, $parameters = [] ) {
 
     return $this->response( $this->client->post( $url, $parameters ) );
   }

@@ -10,21 +10,11 @@ class Response {
 
   protected $headers;
 
-  function __construct( $statusCode, $content, $headers = array() ) {
+  function __construct( $statusCode, $content, $headers = [] ) {
 
     $this->statusCode = $statusCode;
     $this->content    = $content;
     $this->headers    = $headers;
-  }
-
-  public function getContent() {
-
-    return $this->content;
-  }
-
-  public function getStatusCode() {
-
-    return $this->statusCode;
   }
 
   public function isSuccess() {
@@ -36,4 +26,19 @@ class Response {
     
     return false;
   }
+
+  public function getStatusCode() {
+
+    return $this->statusCode;
+  }
+
+  public function getContent() {
+
+    return $this->content;
+  }
+
+  public function getHeaders() {
+
+    return $this->headers;
+  } 
 }

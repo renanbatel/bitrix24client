@@ -15,10 +15,11 @@ class Request {
     $this->client = $client;
   }
 
-  protected function handleRequest( $type, $parameters, $options = array() ) {
+  protected function handleRequest( $type, $options = [] ) {
 
     $endpoint = $this->buildEndpoint();
-    $args     = $this->buildArgs( $type, $this->getQueryVars( $parameters ), $options );
+    $args     = $this->buildArgs( $type, $options );
+    // return $endpoint;
     // return $args;
     return call_user_func_array( [ $this->client, $type ], [ $endpoint, $args ] );
   }
@@ -28,46 +29,45 @@ class Request {
     return "crm.$this->resource.$this->method";
   }
 
-  protected function buildArgs( $type, $parameters, $options = [] ) {
+  protected function buildArgs( $type, $options = [] ) {
 
-    $query = [];
     $args  = [];
-
-    if( $parameters ) {
-
-      foreach( $parameters as $parameter ) {
-
-        $query[ $parameter ] = $options[ $parameter ];
-        unset( $options[ $parameter ] );
-      }
-
-      isset( $args[ 'query' ] ) ? array_merge( $args[ 'query' ], $query ) : $args[ 'query' ] = $query;
-    }
 
     if( ! empty( $options ) ) {
 
-      if( $type == 'get' )
-        isset( $args[ 'query' ] ) ? array_merge( $args[ 'query' ], $options ) : $args[ 'query' ] = $options;
-      else if( $type == 'post' )
-        isset( $args[ 'json' ] ) ? array_merge( $args[ 'json' ], $options ) : $args[ 'json' ] = $options;
+      switch( $type ) {
+
+        case 'get':
+          isset( $args[ 'query' ] ) ? array_merge( $args[ 'query' ], $options ) : $args[ 'query' ] = $options;
+          break;
+        case 'post':
+          isset( $args[ 'json' ] ) ? array_merge( $args[ 'json' ], $options ) : $args[ 'json' ] = $options;
+          break;
+        default:
+      }
     }
 
     return $args;
   }
 
-  protected function getQueryVars( $parameters ) {
+  // protected function getQueryVars( $parameters ) {
 
-    if( empty( $parameters ) ) {
+  //   if( empty( $parameters ) ) {
 
-      return null;
-    }
+  //     return null;
+  //   }
     
-    return explode( ',', $parameters );
-  }
+  //   return explode( ',', $parameters );
+  // }
 
   public function setResource( $resource ) {
 
     $this->resource = $resource;
+  }
+
+  public function addResource( $resource ) {
+
+    $this->resource .= '.' . $resource;
   }
 
   public function setMethod( $method ) {
@@ -75,13 +75,13 @@ class Request {
     $this->method = $method;
   }
 
-  function __call( $name, $args = array() ) {
+  function __call( $name, $args = [] ) {
 
-    if( in_array( $name, array( 'get', 'post' ) ) ) {
+    if( in_array( $name, [ 'get', 'post' ] ) ) {
 
-        $options = ! empty( $args[ 1 ] ) ? $args[ 1 ] : array();
+        $options = ! empty( $args[ 0 ] ) ? $args[ 0 ] : [];
 
-        return $this->handleRequest( $name, $args[ 0 ], $options );
+        return $this->handleRequest( $name, $options );
     }
 
   }

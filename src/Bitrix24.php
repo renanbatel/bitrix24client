@@ -15,7 +15,7 @@ class Bitrix24 {
     $user  = $params[ 'user' ];
     $token = $params[ 'token' ];
 
-    $this->uri = "$uri/rest/$user/$token/";
+    $this->uri = "https://$uri/rest/$user/$token/";
   }
 
   protected function create( $name ) {
