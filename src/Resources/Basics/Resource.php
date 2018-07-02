@@ -31,6 +31,20 @@ abstract class Resource {
     return $this->request->get( $values );
   }
 
+  protected function _update( array $values ) {
+
+    $this->request->setMethod( 'update' );
+
+    return $this->request->post( $values );
+  }
+
+  protected function _delete( array $values ) {
+
+    $this->request->setMethod( 'delete' );
+
+    return $this->request->post( $values );
+  }
+
   protected function _list( array $values ) {
 
     $this->request->setMethod( 'list' );

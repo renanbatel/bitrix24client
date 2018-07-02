@@ -15,9 +15,5 @@ abstract class Entity extends Resource {
 
     return 'Batel\\Bitrix24\\Resources\\Extension\\' . ucfirst( $name );
   }
-
-  function __get( $name ) {
-
-    return $this->create( $name );
-  }
+  
 }
