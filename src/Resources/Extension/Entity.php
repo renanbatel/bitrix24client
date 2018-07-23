@@ -2,19 +2,11 @@
 
 namespace Batel\Bitrix24\Resources\Extension;
 
+use Batel\Bitrix24\Resources\Basics\Extension;
 use Batel\Bitrix24\Http\Request;
 use Batel\Bitrix24\Util\Builder;
 
-class Entity {
-
-  protected $request;
-
-  function __construct( Request $request ) {
-
-    $request->addResource( Builder::getName( $this ) );
-
-    $this->request = $request;
-  }
+class Entity extends Extension {
 
   protected function _items( array $values ) {
 
@@ -30,10 +22,4 @@ class Entity {
     return $this->request->get( '' );
   }
 
-  function __call( $name, $arguments ) {
-
-    $options = ! empty( $arguments[ 0 ] ) ? $arguments[ 0 ] : [];
-
-    return call_user_func_array( [ $this, '_' . $name ], [ $options ] );
-  }
 }
