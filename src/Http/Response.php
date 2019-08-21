@@ -2,43 +2,48 @@
 
 namespace Batel\Bitrix24\Http;
 
-class Response {
+class Response
+{
 
-  protected $statusCode;
+    protected $statusCode;
 
-  protected $content;
+    protected $content;
 
-  protected $headers;
+    protected $headers;
 
-  function __construct( $statusCode, $content, $headers = [] ) {
+    public function __construct($statusCode, $content, $headers = [])
+    {
 
-    $this->statusCode = $statusCode;
-    $this->content    = $content;
-    $this->headers    = $headers;
-  }
-
-  public function isSuccess() {
-
-    if( ! empty( $this->getStatusCode() ) && $this->getStatusCode() == 200 && ! empty( $this->getContent() ) ) {
-
-      return true;
+        $this->statusCode = $statusCode;
+        $this->content    = $content;
+        $this->headers    = $headers;
     }
+
+    public function isSuccess()
+    {
+
+        if (! empty($this->getStatusCode()) && $this->getStatusCode() == 200 && ! empty($this->getContent())) {
+            return true;
+        }
     
-    return false;
-  }
+        return false;
+    }
 
-  public function getStatusCode() {
+    public function getStatusCode()
+    {
 
-    return $this->statusCode;
-  }
+        return $this->statusCode;
+    }
 
-  public function getContent() {
+    public function getContent()
+    {
 
-    return $this->content;
-  }
+        return $this->content;
+    }
 
-  public function getHeaders() {
+    public function getHeaders()
+    {
 
-    return $this->headers;
-  } 
+        return $this->headers;
+    }
 }

@@ -2,10 +2,10 @@
 
 namespace Batel\Bitrix24\Http;
 
-interface Client {
+interface Client
+{
 
-  public function get( $url, $parameters = [] );
+    public function get($url, $parameters = []);
 
-  public function post( $url, $parameters = [] );
-
+    public function post($url, $parameters = []);
 }

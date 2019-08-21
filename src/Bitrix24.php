@@ -5,43 +5,44 @@ namespace Batel\Bitrix24;
 use Batel\Bitrix24\Http\Bitrix24Client;
 use Batel\Bitrix24\Http\Request;
 
-class Bitrix24 {
+class Bitrix24
+{
 
-  protected $uri;
+    protected $uri;
 
-  function __construct( $params ) {
+    public function __construct($params)
+    {
+        $uri   = $params[ "uri" ];
+        $user  = $params[ "user" ];
+        $token = $params[ "token" ];
 
-    $uri   = $params[ 'uri' ];
-    $user  = $params[ 'user' ];
-    $token = $params[ 'token' ];
+        $this->uri = "https://$uri/rest/$user/$token/";
+    }
 
-    $this->uri = "https://$uri/rest/$user/$token/";
-  }
+    protected function create($name)
+    {
+        $class = $this->getClassPath($name);
 
-  protected function create( $name ) {
+        return new $class($this->getRequest());
+    }
 
-    $class = $this->getClassPath( $name );
+    protected function getClassPath($name)
+    {
+        return "Batel\\Bitrix24\\Resources\\" . ucfirst($name);
+    }
 
-    return new $class( $this->getRequest() );
-  }
+    protected function getRequest()
+    {
+        return new Request($this->getClient());
+    }
 
-  protected function getClassPath( $name ) {
+    protected function getClient()
+    {
+        return new Bitrix24Client($this->uri);
+    }
 
-    return 'Batel\\Bitrix24\\Resources\\' . ucfirst( $name );
-  }
-
-  protected function getRequest() {
-
-    return new Request( $this->getClient() );
-  }
-
-  protected function getClient() {
-    
-    return new Bitrix24Client( $this->uri );
-  }
-
-  function __get( $name ) {
-
-    return $this->create( $name );
-  }
+    public function __get($name)
+    {
+        return $this->create($name);
+    }
 }

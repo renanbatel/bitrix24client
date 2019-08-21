@@ -2,38 +2,39 @@
 
 namespace Batel\Bitrix24\Http;
 
-use GuzzleHttp\Client as GuzzleClient;
-use GuzzleHttp\Psr7\Request as GuzzleRequest;
+use Batel\Bitrix24\Http\WPClient;
 use Batel\Bitrix24\Http\Response;
 
-class Bitrix24Client implements Client {
+class Bitrix24Client implements Client
+{
   
-  protected $client;
+    protected $client;
 
-  function __construct( $uri ) {
+    public function __construct($uri)
+    {
+        $this->client = new WPClient([
+        "base_uri"        => $uri,
+        ]);
+    }
 
-    $this->client = new GuzzleClient( [
-      'base_uri'        => $uri,
-      'allow_redirects' => false,
-      'verify'          => false
-     ] );
-  }
+    public function get($url, $args = [])
+    {
 
-  public function get( $url, $parameters = [] ) {
+        return $this->response($this->client->get($url, $args));
+    }
 
-    return $this->response( $this->client->get( $url, $parameters ) );
-  }
+    public function post($url, $args = [])
+    {
 
-  public function post( $url, $parameters = [] ) {
+        return $this->response($this->client->post($url, $args));
+    }
 
-    return $this->response( $this->client->post( $url, $parameters ) );
-  }
+    protected function response($response)
+    {
+        $content = json_decode($response[ "body" ]);
+        $status  = $response[ "response" ][ "code" ];
+        $headers = $response[ "headers" ]->getAll();
 
-  protected function response( $response ) {
-
-    $content = json_decode( $response->getBody() );
-
-    return new Response( $response->getStatusCode(), $content, $response->getHeaders() );
-  }
-
+        return new Response($status, $content, $headers);
+    }
 }

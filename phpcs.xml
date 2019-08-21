@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="Bitrix24Client">
+  <description>Bitrix24Client Coding Standards</description>
+
+  <!-- Scan all file in root -->
+  <file>./src</file>
+
+  <!-- Scan only PHP files -->
+  <arg name="extensions" value="php"/>
+
+  <!-- Options -->
+  <arg value="-colors"/>
+
+  <!-- Show sniff codes in all reports -->
+  <arg value="ns"/>
+
+  <!-- Use PSR-2 as a standand -->
+  <rule ref="PSR2"/>
+</ruleset>
